@@ -102,7 +102,7 @@ export function PasteScreen({
 
   return (
     <main ref={mainRef} className="flex min-h-screen flex-col items-center px-6 pt-28 pb-16">
-      <div className={`${FONT_CLASS[settings.font]} flex w-full flex-1 flex-col`} style={columnStyle({ fontSize: settings.editorFontSize, lineWidth: settings.lineWidth })}>
+      <div className={`${FONT_CLASS[settings.font]} flex w-full flex-1 flex-col`} style={columnStyle({ fontSize: settings.editorFontSize, lineWidth: settings.editorLineWidth })}>
         {preview ? (
           <MarkdownPreview markdown={value} />
         ) : (

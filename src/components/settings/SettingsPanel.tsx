@@ -77,9 +77,11 @@ export function SettingsPanel({
             options={FONT_OPTIONS.map((f) => ({ value: f.id, label: f.label, hint: f.note, className: f.className }))}
           />
           <Slider label="reading size" value={settings.fontSize} min={16} max={50} format={(v) => `${v}px`} onChange={(fontSize) => update({ fontSize })} />
+          <Slider label="reading width" value={settings.lineWidth} min={45} max={90} format={(v) => `${v}ch`} onChange={(lineWidth) => update({ lineWidth })} />
+          <WidthNote font={settings.font} fontSize={settings.fontSize} lineWidth={settings.lineWidth} />
           <Slider label="editing size" value={settings.editorFontSize} min={14} max={50} format={(v) => `${v}px`} onChange={(editorFontSize) => update({ editorFontSize })} />
-          <Slider label="width" value={settings.lineWidth} min={45} max={90} format={(v) => `${v}ch`} onChange={(lineWidth) => update({ lineWidth })} />
-          <WidthNote settings={settings} />
+          <Slider label="editing width" value={settings.editorLineWidth} min={45} max={90} format={(v) => `${v}ch`} onChange={(editorLineWidth) => update({ editorLineWidth })} />
+          <WidthNote font={settings.font} fontSize={settings.editorFontSize} lineWidth={settings.editorLineWidth} />
         </Group>
 
         <Group title="bionic">
