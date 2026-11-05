@@ -40,8 +40,10 @@ export interface Settings {
   fontSize: number
   /** Font size in px for the paste/editing screen. */
   editorFontSize: number
-  /** Max line width in `ch`. */
+  /** Max reading line width in `ch`. */
   lineWidth: number
+  /** Max editor line width in `ch`. */
+  editorLineWidth: number
   bionic: boolean
   /** Fraction of each word to bold, 0.2–0.7. */
   bionicIntensity: number
@@ -65,6 +67,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fontSize: 20,
   editorFontSize: 18,
   lineWidth: 65,
+  editorLineWidth: 65,
   bionic: true,
   bionicIntensity: 0.45,
   autoAdvance: false,
