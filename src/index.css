@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+/*
+ * Theme tokens. Monkeytype-style muted greys + a single accent.
+ * Use these via Tailwind: bg-bg, bg-surface, text-text, text-sub, text-accent, border-line, etc.
+ * The theme is switched by setting data-theme="light|dark" on <html>.
+ */
+:root,
+:root[data-theme='dark'] {
+  --bg: #2c2e31;
+  --surface: #25272a;
+  --surface-2: #35383c;
+  --text: #d1d0c5;
+  --sub: #646669;
+  --line: #3c3f43;
+  --accent: #e2b714;
+  --accent-soft: rgb(226 183 20 / 0.12);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #e1e1e3;
+  --surface: #d4d4d7;
+  --surface-2: #cbcbcf;
+  --text: #323437;
+  --sub: #8a8b8f;
+  --line: #c4c4c8;
+  --accent: #b8860b;
+  --accent-soft: rgb(184 134 11 / 0.14);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-sub: var(--sub);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-atkinson: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-literata: 'Literata', Georgia, serif;
+  --font-lexend: 'Lexend', system-ui, sans-serif;
+  --font-system: system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-atkinson);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
