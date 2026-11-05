@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CheckIn } from './components/pacing/CheckIn'
 import { HelpOverlay } from './components/pacing/HelpOverlay'
 import { StatusBar } from './components/pacing/StatusBar'
 import { PasteScreen } from './components/reader/PasteScreen'
 import { Reader } from './components/reader/Reader'
 import { SettingsPanel } from './components/settings/SettingsPanel'
+import { ConfirmDialog } from './components/ui/ConfirmDialog'
 import { TopBar } from './components/settings/TopBar'
 import { usePacing } from './hooks/usePacing'
 import { parseChunks } from './lib/markdown'
@@ -17,6 +18,7 @@ export default function App() {
   const [markdown, setMarkdown] = useState<string | null>(() => loadDoc()?.markdown ?? null)
   const [index, setIndex] = useState(() => loadDoc()?.index ?? 0)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [confirmNew, setConfirmNew] = useState(false)
 
   const chunks = useMemo(() => (markdown ? parseChunks(markdown) : []), [markdown])
 
@@ -25,11 +27,14 @@ export default function App() {
     if (markdown) saveDoc({ markdown, index, updatedAt: Date.now() })
   }, [markdown, index])
 
-  const startNew = () => {
+  const startNew = useCallback(() => {
     clearDoc()
     setMarkdown(null)
     setIndex(0)
-  }
+    setConfirmNew(false)
+  }, [])
+  const cancelNew = useCallback(() => setConfirmNew(false), [])
+  const requestNew = () => setConfirmNew(true)
 
   const pacing = usePacing({
     chunks,
@@ -38,8 +43,9 @@ export default function App() {
     settings,
     update,
     active: markdown !== null,
-    onNewText: startNew,
-    settingsOpen,
+    onNewText: requestNew,
+    // The confirm dialog blocks reader hotkeys and auto-advance just like settings does.
+    settingsOpen: settingsOpen || confirmNew,
     setSettingsOpen,
   })
 
@@ -47,7 +53,7 @@ export default function App() {
     <div className="min-h-screen bg-bg text-text">
       <TopBar
         hasDoc={markdown !== null}
-        onNewText={startNew}
+        onNewText={requestNew}
         onOpenSettings={() => setSettingsOpen(true)}
         settings={settings}
         update={update}
@@ -76,6 +82,14 @@ export default function App() {
 
       {pacing.checkIn && <CheckIn section={pacing.checkIn.section} onResolve={pacing.resolveCheckIn} />}
       <HelpOverlay open={pacing.helpOpen} onClose={() => pacing.setHelpOpen(false)} />
+      {confirmNew && (
+        <ConfirmDialog
+          message="Start a new text? The current one will be cleared."
+          confirmLabel="clear"
+          onConfirm={startNew}
+          onCancel={cancelNew}
+        />
+      )}
       <SettingsPanel
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}

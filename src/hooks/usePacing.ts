@@ -27,6 +27,7 @@ interface PacingOptions {
   settings: Settings
   update: (patch: Partial<Settings>) => void
   active: boolean
+  /** Asks to start a new text (App shows a confirm dialog). */
   onNewText: () => void
   settingsOpen: boolean
   setSettingsOpen: (open: boolean) => void
@@ -205,7 +206,7 @@ export function usePacing(opts: PacingOptions): PacingState {
           s.setSettingsOpen(true)
           break
         case 'newText':
-          if (window.confirm('Start a new text? The current one will be cleared.')) s.onNewText()
+          s.onNewText()
           break
       }
       handled()
