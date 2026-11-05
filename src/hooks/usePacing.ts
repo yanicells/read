@@ -29,6 +29,8 @@ interface PacingOptions {
   active: boolean
   /** Asks to start a new text (App shows a confirm dialog). */
   onNewText: () => void
+  /** Leaves the reader for the editor, keeping the current text. */
+  onEdit: () => void
   settingsOpen: boolean
   setSettingsOpen: (open: boolean) => void
 }
@@ -132,6 +134,7 @@ export function usePacing(opts: PacingOptions): PacingState {
         if (s.helpOpen) setHelpOpen(false)
         else if (s.settingsOpen) s.setSettingsOpen(false)
         else if (s.checkIn) setCheckInState(null)
+        else if (s.active) s.onEdit()
         else return
         e.preventDefault()
         return

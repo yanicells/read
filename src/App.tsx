@@ -19,6 +19,9 @@ export default function App() {
   const [index, setIndex] = useState(() => loadDoc()?.index ?? 0)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [confirmNew, setConfirmNew] = useState(false)
+  // Editing the open text: the editor shows it, the reader is paused underneath.
+  const [editing, setEditing] = useState(false)
+  const reading = markdown !== null && !editing
 
   const chunks = useMemo(() => (markdown ? parseChunks(markdown) : []), [markdown])
 
@@ -32,6 +35,7 @@ export default function App() {
     setMarkdown(null)
     setIndex(0)
     setConfirmNew(false)
+    setEditing(false)
   }, [])
   const cancelNew = useCallback(() => setConfirmNew(false), [])
   const requestNew = () => setConfirmNew(true)
@@ -42,8 +46,9 @@ export default function App() {
     setIndex,
     settings,
     update,
-    active: markdown !== null,
+    active: reading,
     onNewText: requestNew,
+    onEdit: () => setEditing(true),
     // The confirm dialog blocks reader hotkeys and auto-advance just like settings does.
     settingsOpen: settingsOpen || confirmNew,
     setSettingsOpen,
@@ -52,19 +57,23 @@ export default function App() {
   return (
     <div className="min-h-screen bg-bg text-text">
       <TopBar
-        hasDoc={markdown !== null}
+        hasDoc={reading}
         onNewText={requestNew}
         onOpenSettings={() => setSettingsOpen(true)}
         settings={settings}
         update={update}
       />
 
-      {markdown === null ? (
+      {!reading ? (
         <PasteScreen
           settings={settings}
+          initialValue={markdown ?? ''}
+          onCancel={markdown !== null ? () => setEditing(false) : undefined}
           onSubmit={(md) => {
+            // Unchanged text keeps your place; edited text starts over.
+            if (md !== markdown) setIndex(0)
             setMarkdown(md)
-            setIndex(0)
+            setEditing(false)
           }}
         />
       ) : (
