@@ -75,7 +75,7 @@ export function SettingsPanel({
             onChange={(font) => update({ font })}
             options={FONT_OPTIONS.map((f) => ({ value: f.id, label: f.label, hint: f.note, className: f.className }))}
           />
-          <Slider label="size" value={settings.fontSize} min={16} max={28} format={(v) => `${v}px`} onChange={(fontSize) => update({ fontSize })} />
+          <Slider label="size" value={settings.fontSize} min={16} max={50} format={(v) => `${v}px`} onChange={(fontSize) => update({ fontSize })} />
           <Slider label="width" value={settings.lineWidth} min={45} max={90} format={(v) => `${v}ch`} onChange={(lineWidth) => update({ lineWidth })} />
         </Group>
 
