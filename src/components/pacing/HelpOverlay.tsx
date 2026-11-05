@@ -27,7 +27,7 @@ const GROUPS: { title: string; rows: [keys: string[], label: string][] }[] = [
       [['?'], 'this help'],
       [[','], 'settings'],
       [['n'], 'new text'],
-      [['esc'], 'close'],
+      [['esc'], 'close / edit text'],
     ],
   },
 ]

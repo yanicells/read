@@ -33,9 +33,22 @@ const focus = chunks[index]
 > If you drift off, the current block gently pulses to bring you back.
 `
 
-/** Calm empty state: a big borderless textarea to paste markdown into. */
-export function PasteScreen({ settings, onSubmit }: { settings: Settings; onSubmit: (markdown: string) => void }) {
-  const [value, setValue] = useState('')
+/**
+ * Calm editor: a big borderless textarea to paste markdown into.
+ * Pass `initialValue` + `onCancel` when editing an open text; Esc then returns to the reader.
+ */
+export function PasteScreen({
+  settings,
+  initialValue = '',
+  onSubmit,
+  onCancel,
+}: {
+  settings: Settings
+  initialValue?: string
+  onSubmit: (markdown: string) => void
+  onCancel?: () => void
+}) {
+  const [value, setValue] = useState(initialValue)
   const ref = useRef<HTMLTextAreaElement>(null)
   const canSubmit = value.trim().length > 0
 
@@ -69,6 +82,9 @@ export function PasteScreen({ settings, onSubmit }: { settings: Settings; onSubm
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
               e.preventDefault()
               submit()
+            } else if (e.key === 'Escape' && onCancel) {
+              e.preventDefault()
+              onCancel()
             }
           }}
           placeholder="paste something to read…"
@@ -76,7 +92,7 @@ export function PasteScreen({ settings, onSubmit }: { settings: Settings; onSubm
           className={`min-h-[60vh] w-full flex-1 resize-none border-0 bg-transparent leading-relaxed text-text caret-accent outline-none placeholder:text-sub`}
         />
         <div className="mt-8 flex items-center justify-between text-xs text-sub/70">
-          <span>⌘ ↵ to start · space to step · ? for keys</span>
+          <span>{onCancel ? '⌘ ↵ to read · esc to go back' : '⌘ ↵ to start · space to step · ? for keys'}</span>
           {!canSubmit && (
             <button
               type="button"
