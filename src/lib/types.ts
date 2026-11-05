@@ -36,8 +36,10 @@ export type FontId = 'atkinson' | 'literata' | 'lexend' | 'system'
 export interface Settings {
   theme: ThemeMode
   font: FontId
-  /** Base font size in px. */
+  /** Reading (focus) font size in px. */
   fontSize: number
+  /** Font size in px for the paste/editing screen. */
+  editorFontSize: number
   /** Max line width in `ch`. */
   lineWidth: number
   bionic: boolean
@@ -61,6 +63,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'dark',
   font: 'atkinson',
   fontSize: 20,
+  editorFontSize: 18,
   lineWidth: 65,
   bionic: true,
   bionicIntensity: 0.45,
