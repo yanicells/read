@@ -4,6 +4,7 @@ import { DEFAULT_SETTINGS, type Settings } from '../../lib/types'
 import { Select } from '../ui/Select'
 import { Slider } from '../ui/Slider'
 import { Toggle } from '../ui/Toggle'
+import { WidthNote } from './WidthNote'
 
 const PREVIEW = 'Reading feels lighter when your eyes have an anchor.'
 
@@ -77,6 +78,7 @@ export function SettingsPanel({
           />
           <Slider label="size" value={settings.fontSize} min={16} max={50} format={(v) => `${v}px`} onChange={(fontSize) => update({ fontSize })} />
           <Slider label="width" value={settings.lineWidth} min={45} max={90} format={(v) => `${v}ch`} onChange={(lineWidth) => update({ lineWidth })} />
+          <WidthNote settings={settings} />
         </Group>
 
         <Group title="bionic">

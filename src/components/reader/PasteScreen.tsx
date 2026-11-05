@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { columnStyle } from '../../lib/layout'
 import type { Settings } from '../../lib/types'
 import { FONT_CLASS } from './fonts'
 
@@ -58,7 +59,7 @@ export function PasteScreen({ settings, onSubmit }: { settings: Settings; onSubm
 
   return (
     <main className="flex min-h-screen flex-col items-center px-6 pt-28 pb-16">
-      <div className="flex w-full flex-1 flex-col" style={{ maxWidth: `${settings.lineWidth}ch` }}>
+      <div className={`${FONT_CLASS[settings.font]} flex w-full flex-1 flex-col`} style={columnStyle(settings)}>
         <textarea
           ref={ref}
           autoFocus
@@ -72,8 +73,7 @@ export function PasteScreen({ settings, onSubmit }: { settings: Settings; onSubm
           }}
           placeholder="paste something to read…"
           spellCheck={false}
-          className={`${FONT_CLASS[settings.font]} min-h-[60vh] w-full flex-1 resize-none border-0 bg-transparent leading-relaxed text-text caret-accent outline-none placeholder:text-sub`}
-          style={{ fontSize: `${settings.fontSize}px` }}
+          className={`min-h-[60vh] w-full flex-1 resize-none border-0 bg-transparent leading-relaxed text-text caret-accent outline-none placeholder:text-sub`}
         />
         <div className="mt-8 flex items-center justify-between text-xs text-sub/70">
           <span>⌘ ↵ to start · space to step · ? for keys</span>

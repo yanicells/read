@@ -2,7 +2,7 @@ import type { Chunk } from '../../lib/types'
 
 /** Scoped styles for rendered chunk HTML, the current-chunk marker, nudge pulse and deep-focus fade. */
 const CSS = `
-.read-prose { line-height: 1.65; overflow-wrap: break-word; }
+.read-prose { line-height: 1.65; overflow-wrap: anywhere; }
 .read-prose > :first-child { margin-top: 0; }
 .read-prose > :last-child { margin-bottom: 0; }
 .read-prose p { margin: 0; }
