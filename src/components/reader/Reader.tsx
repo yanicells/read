@@ -1,5 +1,6 @@
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { applyBionic } from '../../lib/bionic'
+import { columnStyle } from '../../lib/layout'
 import type { Chunk, Settings } from '../../lib/types'
 import { ChunkStyles, ChunkView } from './ChunkView'
 import { FONT_CLASS } from './fonts'
@@ -56,7 +57,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
   }, [index, deepFocus])
 
   const current = chunks[index]
-  const columnStyle = { maxWidth: `${lineWidth}ch`, fontSize: `${fontSize}px` }
+  const style = columnStyle({ fontSize, lineWidth })
   const columnClass = `${FONT_CLASS[font]} relative mx-auto w-full px-6 text-text`
 
   if (deepFocus) {
@@ -66,7 +67,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
         <ChunkStyles />
         <ProgressBar index={index} total={chunks.length} />
         <main className="flex min-h-screen items-center py-24">
-          <div className={columnClass} style={columnStyle}>
+          <div className={columnClass} style={style}>
             {current && (
               <div key={current.id} className="read-fade">
                 {label && (
@@ -92,7 +93,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
       <ChunkStyles />
       <ProgressBar index={index} total={chunks.length} />
       <main className="py-[45vh]">
-        <div className={columnClass} style={columnStyle}>
+        <div className={columnClass} style={style}>
           {chunks.map((chunk, i) => {
             const isCurrent = i === index
             return (
