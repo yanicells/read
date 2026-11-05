@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import { applyBionic } from '../../lib/bionic'
 import type { Chunk, Settings } from '../../lib/types'
 import { ChunkStyles, ChunkView } from './ChunkView'
@@ -30,7 +30,7 @@ function spacing(chunk: Chunk): string {
  * The reading column. Shows all chunks with the current one highlighted and the rest dimmed,
  * or (deep focus) only the current chunk centered on screen.
  */
-export function Reader({ chunks, index, onSelect, settings, nudging }: ReaderProps) {
+export const Reader = memo(function Reader({ chunks, index, onSelect, settings, nudging }: ReaderProps) {
   const { font, fontSize, lineWidth, bionic, bionicIntensity, deepFocus } = settings
   const currentRef = useRef<HTMLDivElement>(null)
   const firstScroll = useRef(true)
@@ -114,4 +114,4 @@ export function Reader({ chunks, index, onSelect, settings, nudging }: ReaderPro
       </main>
     </>
   )
-}
+})
