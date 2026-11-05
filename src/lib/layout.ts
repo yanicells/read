@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import type { Settings } from './types'
+import type { Chunk, Settings } from './types'
 
 /** Space kept free on each side of the text column, so big text never runs to the screen edge. */
 const SIDE_GUTTER_REM = 4
@@ -21,4 +21,11 @@ export function columnStyle({ fontSize, lineWidth }: Pick<Settings, 'fontSize' |
  */
 export function maxFittingCh(chPx: number, viewportPx: number, remPx = 16): number {
   return Math.floor((viewportPx - SIDE_GUTTER_REM * 2 * remPx) / chPx)
+}
+
+/** Vertical rhythm around a chunk, shared by the reader and the editor preview. */
+export function chunkSpacing(chunk: Chunk): string {
+  if (chunk.kind === 'heading') return 'mt-[1.6em] mb-[0.9em]'
+  if (chunk.kind === 'list-item') return 'mb-[0.55em]'
+  return 'mb-[1.4em]'
 }

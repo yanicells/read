@@ -2,6 +2,7 @@ import { memo, useEffect, useMemo, useRef } from 'react'
 import { applyBionic } from '../../lib/bionic'
 import { columnStyle } from '../../lib/layout'
 import type { Chunk, Settings } from '../../lib/types'
+import { chunkSpacing } from '../../lib/layout'
 import { ChunkStyles, ChunkView } from './ChunkView'
 import { FONT_CLASS } from './fonts'
 import { ProgressBar } from './ProgressBar'
@@ -21,12 +22,6 @@ function sectionLabel(chunks: Chunk[], i: number): string | null {
 }
 
 /** Vertical rhythm: headings get more air above, list items sit close together. */
-function spacing(chunk: Chunk): string {
-  if (chunk.kind === 'heading') return 'mt-[1.6em] mb-[0.9em]'
-  if (chunk.kind === 'list-item') return 'mb-[0.55em]'
-  return 'mb-[1.4em]'
-}
-
 /**
  * The reading column. Shows all chunks with the current one highlighted and the rest dimmed,
  * or (deep focus) only the current chunk centered on screen.
@@ -103,7 +98,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
                 onClick={isCurrent ? undefined : () => onSelect(i)}
                 data-current={isCurrent}
                 data-nudge={isCurrent && nudging}
-                className={`read-chunk relative ${spacing(chunk)} ${
+                className={`read-chunk relative ${chunkSpacing(chunk)} ${
                   isCurrent ? 'opacity-100' : 'cursor-pointer opacity-25 hover:opacity-40'
                 }`}
               >
