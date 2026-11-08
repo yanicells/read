@@ -9,6 +9,19 @@ export type ChunkKind =
   | 'code'
   | 'table'
   | 'hr'
+  /** A ```mermaid fence, drawn as a diagram. */
+  | 'diagram'
+  /** A ```chart fence holding chart JSON (the format think writes). */
+  | 'chart'
+
+/** Data for a ```chart fence: bar/line charts take several series, a pie takes one. */
+export interface ChartData {
+  type: 'bar' | 'line' | 'pie'
+  title: string
+  unit?: string
+  labels: string[]
+  series: { name: string; values: number[] }[]
+}
 
 export interface Chunk {
   /** Stable index-based id, e.g. "c12". */
@@ -28,6 +41,10 @@ export interface Chunk {
   /** For list items: whether the parent list is ordered, and the item's number. */
   ordered?: boolean
   start?: number
+  /** For diagrams: the Mermaid source. */
+  source?: string
+  /** For charts: the parsed chart. */
+  chart?: ChartData
 }
 
 export type ThemeMode = 'dark' | 'light'

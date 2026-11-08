@@ -1,4 +1,5 @@
 import { Marked, type Token, type Tokens } from 'marked'
+import { parseChart } from './chart'
 import type { Chunk } from './types'
 
 const SAFE_URL = /^(https?:|mailto:|#|\/)/i
@@ -20,12 +21,27 @@ const marked = new Marked({
     },
     image: (token) => (SAFE_URL.test(token.href) ? false : escapeHtml(token.text)),
   },
+  extensions: [
+    // `==text==` highlights, as think writes them. An unclosed `==` stays plain text.
+    {
+      name: 'highlight',
+      level: 'inline',
+      start: (src: string) => src.indexOf('=='),
+      tokenizer(src: string) {
+        const m = /^==(?=\S)([\s\S]*?\S)==/.exec(src)
+        if (m) return { type: 'highlight', raw: m[0], tokens: this.lexer.inlineTokens(m[1]) }
+      },
+      renderer(token) {
+        return `<mark>${this.parser.parseInline(token.tokens ?? [])}</mark>`
+      },
+    },
+  ],
 })
 
 const inline = (tokens: Token[]) => marked.Parser.parseInline(tokens, marked.defaults).trim()
 const block = (token: Token) => marked.Parser.parse([token], marked.defaults).trim()
 
-const INLINE = new Set(['text', 'escape', 'strong', 'em', 'del', 'codespan', 'link', 'image', 'br', 'html'])
+const INLINE = new Set(['text', 'escape', 'strong', 'em', 'del', 'codespan', 'link', 'image', 'br', 'html', 'highlight'])
 
 /** Plain text of a token tree (markdown stripped), whitespace-normalized. */
 function plain(tokens: Token[]): string {
@@ -53,7 +69,8 @@ function plainOne(t: Token): string {
   }
 }
 
-type Draft = Pick<Chunk, 'kind' | 'level' | 'html' | 'text'> & Partial<Pick<Chunk, 'ordered' | 'start'>>
+type Draft = Pick<Chunk, 'kind' | 'level' | 'html' | 'text'> &
+  Partial<Pick<Chunk, 'ordered' | 'start' | 'source' | 'chart'>>
 
 /** Inner HTML of a list item without its nested lists; loose/multi-block items become <p>s. */
 function listItemHtml(item: Tokens.ListItem): string {
@@ -103,9 +120,21 @@ function tokenToDrafts(t: Token, out: Draft[]) {
     case 'hr':
       out.push({ kind: 'hr', level: 0, html: '<hr>', text: '' })
       return
-    case 'code':
-      out.push({ kind: 'code', level: 0, html: block(t), text: (t as Tokens.Code).text })
+    case 'code': {
+      const code = t as Tokens.Code
+      const lang = code.lang?.trim().toLowerCase()
+      if (lang === 'mermaid' && code.text.trim()) {
+        out.push({ kind: 'diagram', level: 0, html: '', text: '', source: code.text.trim() })
+        return
+      }
+      const chart = lang === 'chart' ? parseChart(code.text) : null
+      if (chart) {
+        out.push({ kind: 'chart', level: 0, html: '', text: chart.title, chart })
+        return
+      }
+      out.push({ kind: 'code', level: 0, html: block(t), text: code.text })
       return
+    }
     case 'blockquote':
     case 'table':
       out.push({ kind: t.type, level: 0, html: block(t), text: plain([t]) })

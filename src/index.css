@@ -15,6 +15,12 @@
   --line: #3c3f43;
   --accent: #e2b714;
   --accent-soft: rgb(226 183 20 / 0.12);
+  /* Chart series, in fixed order (same palette as think). */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
   color-scheme: dark;
 }
 
@@ -27,6 +33,11 @@
   --line: #c4c4c8;
   --accent: #b8860b;
   --accent-soft: rgb(184 134 11 / 0.14);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
   color-scheme: light;
 }
 

@@ -3,13 +3,14 @@ import { Markdown } from '@tiptap/markdown'
 import { Plugin } from '@tiptap/pm/state'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { Highlight } from '@tiptap/extension-highlight'
 import { TableKit } from '@tiptap/extension-table'
 import { Placeholder } from '@tiptap/extensions'
 import { useEffect, useRef } from 'react'
 import { EDITOR_CSS } from './editorStyles'
 
-/** Plain text that reads like markdown (headings, lists, quotes, fences, bold, inline code). */
-const LOOKS_LIKE_MD = /^(#{1,6}\s|\s*[-*+]\s|\s*\d+[.)]\s|>|```|\|)|\*\*|__|`[^`]+`|\[[^\]]+\]\(/m
+/** Plain text that reads like markdown (headings, lists, quotes, fences, bold, highlights, inline code). */
+const LOOKS_LIKE_MD = /^(#{1,6}\s|\s*[-*+]\s|\s*\d+[.)]\s|>|```|\|)|\*\*|__|==\S|`[^`]+`|\[[^\]]+\]\(/m
 
 /**
  * Pasted markdown (what LLM "copy" buttons give you) becomes rich content instead of raw symbols.
@@ -62,6 +63,7 @@ export function RichEditor({ initialMarkdown, onChange, onSubmit, onCancel, edit
     extensions: [
       StarterKit.configure({ link: { openOnClick: false } }),
       TableKit,
+      Highlight,
       Placeholder.configure({ placeholder: 'paste something to read…' }),
       Markdown,
       MarkdownPaste,
