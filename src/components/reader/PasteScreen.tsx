@@ -35,6 +35,15 @@ const focus = chunks[index]
 \`\`\`
 
 > If you drift off, the current block gently pulses to bring you back.
+
+## Diagrams and charts
+
+Mermaid diagrams and chart blocks draw themselves, and ==highlights== stand out.
+
+\`\`\`mermaid
+flowchart LR
+  A["Paste"] --> B["Step through"] --> C["Done"]
+\`\`\`
 `
 
 /**

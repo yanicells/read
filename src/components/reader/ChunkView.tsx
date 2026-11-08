@@ -1,4 +1,6 @@
-import type { Chunk } from '../../lib/types'
+import type { Chunk, ThemeMode } from '../../lib/types'
+import { Chart } from './Chart'
+import { Mermaid } from './Mermaid'
 
 /** Scoped styles for rendered chunk HTML, the current-chunk marker, nudge pulse and deep-focus fade. */
 const CSS = `
@@ -24,6 +26,7 @@ const CSS = `
 .read-prose blockquote { margin: 0; padding-left: 1.1em; border-left: 2px solid var(--line); color: var(--sub); font-style: normal; }
 .read-prose hr { border: 0; border-top: 1px solid var(--line); margin: 0.5em 0; }
 .read-prose img { max-width: 100%; }
+.read-prose mark { background: var(--accent-soft); color: inherit; border-radius: 0.2em; padding: 0 0.15em; box-shadow: inset 0 -0.12em 0 color-mix(in srgb, var(--accent) 55%, transparent); }
 
 .read-chunk { transition: opacity 400ms ease; }
 .read-chunk::before {
@@ -53,8 +56,13 @@ function listMarker(chunk: Chunk): string {
   return chunk.level === 0 ? '•' : '–'
 }
 
-/** One chunk's content. List items get a drawn bullet/number, indented by nesting level. */
-export function ChunkView({ chunk, html }: { chunk: Chunk; html: string }) {
+/**
+ * One chunk's content. List items get a drawn bullet/number, indented by nesting level;
+ * diagrams and charts draw themselves.
+ */
+export function ChunkView({ chunk, html, theme }: { chunk: Chunk; html: string; theme: ThemeMode }) {
+  if (chunk.kind === 'diagram' && chunk.source) return <Mermaid source={chunk.source} theme={theme} />
+  if (chunk.kind === 'chart' && chunk.chart) return <Chart chart={chunk.chart} />
   const body = <div className="read-prose min-w-0 flex-1" dangerouslySetInnerHTML={{ __html: html }} />
 
   if (chunk.kind !== 'list-item') return body

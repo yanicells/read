@@ -26,6 +26,7 @@ export const EDITOR_CSS = `
 .read-editor th, .read-editor td { border-bottom: 1px solid var(--line); padding: 0.35em 1.2em 0.35em 0; text-align: left; vertical-align: top; }
 .read-editor th { font-weight: 700; }
 .read-editor td > p, .read-editor th > p { margin: 0; }
+.read-editor mark { background: var(--accent-soft); color: inherit; border-radius: 0.2em; padding: 0 0.15em; box-shadow: inset 0 -0.12em 0 color-mix(in srgb, var(--accent) 55%, transparent); }
 .read-editor .selectedCell { background: var(--accent-soft); }
 .read-editor p.is-editor-empty:first-child::before {
   content: attr(data-placeholder); color: var(--sub); float: left; height: 0; pointer-events: none;

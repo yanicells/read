@@ -73,7 +73,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
                   data-current="true"
                   data-nudge={nudging}
                 >
-                  <ChunkView chunk={current} html={htmls[index]} />
+                  <ChunkView chunk={current} html={htmls[index]} theme={settings.theme} />
                 </div>
               </div>
             )}
@@ -102,7 +102,7 @@ export const Reader = memo(function Reader({ chunks, index, onSelect, settings, 
                   isCurrent ? 'opacity-100' : 'cursor-pointer opacity-25 hover:opacity-40'
                 }`}
               >
-                <ChunkView chunk={chunk} html={htmls[i]} />
+                <ChunkView chunk={chunk} html={htmls[i]} theme={settings.theme} />
               </div>
             )
           })}
