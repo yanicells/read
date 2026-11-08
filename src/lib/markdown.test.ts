@@ -64,3 +64,25 @@ test('text is plain, wordCount derived from it', () => {
   expect(c.wordCount).toBe(5)
   expect(parseChunks('')).toEqual([])
 })
+
+test('==highlights== become <mark>, unclosed == stays plain', () => {
+  const [c] = parseChunks('Some ==very **key**== idea, and a == b.')
+  expect(c.html).toContain('<mark>very <strong>key</strong></mark>')
+  expect(c.html).toContain('a == b')
+  expect(c.text).toBe('Some very key idea, and a == b.')
+})
+
+test('mermaid fences become diagram chunks', () => {
+  const [c] = parseChunks('```mermaid\nflowchart LR\n  A --> B\n```')
+  expect(c.kind).toBe('diagram')
+  expect(c.source).toBe('flowchart LR\n  A --> B')
+})
+
+test('valid chart fences become chart chunks; invalid ones stay code', () => {
+  const good = '{ "type": "bar", "title": "T", "labels": ["a", "b"], "series": [{ "name": "s", "values": [1, 2] }] }'
+  const bad = '{ "type": "bar", "title": "T", "labels": ["a", "b"], "series": [{ "name": "s", "values": [1] }] }'
+  const [c] = parseChunks('```chart\n' + good + '\n```')
+  expect(c.kind).toBe('chart')
+  expect(c.chart?.series[0].values).toEqual([1, 2])
+  expect(parseChunks('```chart\n' + bad + '\n```')[0].kind).toBe('code')
+})

@@ -72,10 +72,11 @@ export function clampWpm(wpm: number): number {
 
 /**
  * How long auto-advance lingers on a chunk: word count at the given wpm (floor 1.5s),
- * 1.5x for dense code/tables, and a quick fixed beat for headings and dividers.
+ * 1.5x for dense code/tables, a quick fixed beat for headings and dividers, and a long look at visuals.
  */
 export function dwellMs(chunk: Chunk, wpm: number): number {
   if (chunk.kind === 'heading') return 1200
+  if (chunk.kind === 'diagram' || chunk.kind === 'chart') return 8000
   if (chunk.kind === 'hr') return 1000
   const base = Math.max(1500, (chunk.wordCount / wpm) * 60000)
   return chunk.kind === 'code' || chunk.kind === 'table' ? base * 1.5 : base
