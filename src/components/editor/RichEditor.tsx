@@ -1,5 +1,6 @@
 import { Extension, type Editor } from '@tiptap/core'
 import { Markdown } from '@tiptap/markdown'
+import { Code } from '@tiptap/extension-code'
 import { Plugin } from '@tiptap/pm/state'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -8,6 +9,10 @@ import { TableKit } from '@tiptap/extension-table'
 import { Placeholder } from '@tiptap/extensions'
 import { useEffect, useRef } from 'react'
 import { EDITOR_CSS } from './editorStyles'
+
+// Inline code that can sit inside bold or italic. Tiptap's default code mark excludes every
+// other mark, so markdown like **JT = `x`.** threw on paste and fell back to raw text.
+const CodeInMarks = Code.extend({ excludes: '' })
 
 /** Plain text that reads like markdown (headings, lists, quotes, fences, bold, highlights, inline code). */
 const LOOKS_LIKE_MD = /^(#{1,6}\s|\s*[-*+]\s|\s*\d+[.)]\s|>|```|\|)|\*\*|__|==\S|`[^`]+`|\[[^\]]+\]\(/m
@@ -61,7 +66,8 @@ export function RichEditor({ initialMarkdown, onChange, onSubmit, onCancel, edit
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ link: { openOnClick: false } }),
+      StarterKit.configure({ link: { openOnClick: false }, code: false }),
+      CodeInMarks,
       TableKit,
       Highlight,
       Placeholder.configure({ placeholder: 'paste something to read…' }),
